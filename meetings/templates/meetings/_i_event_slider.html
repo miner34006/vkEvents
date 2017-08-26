@@ -1,0 +1,22 @@
+{% load staticfiles %}
+
+{% block groupSlider %}
+  <div>
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+        {% for event in events %}
+          <div class="swiper-slide">
+            <a onclick="return false;" href="#">
+              <img style="margin-bottom: 5px" src="{{event.event_image}}" class="center img-circle slider-shadow" id="{{ event.event_id }}">
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+      <hr class="line" style="margin-top: 15px">
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static "js/swiper.js" %}"></script>
+{% endblock %}

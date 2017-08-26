@@ -1,0 +1,15 @@
+{% extends "__base.html" %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      {% include "meetings/_i_navbar.html" %}
+      <div class="col-lg-offset-1 col-lg-2 col-sm-3 sidebar">
+        {% include "meetings/_i_sidebar.html"%}
+      </div>
+      <div class="col-lg-8 col-sm-9 col-xs-12 main">
+        {% block main_col %}{% endblock %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,303 @@
+/* essential elements */
+
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
+body{
+  background-color: #FFEBEE;
+}
+
+.main{
+  /* разметка основного блока */
+  margin-top: 65px;
+}
+
+.sidebar{
+  /* разметка sideBara'a (левое меню) */
+  margin-top: 65px;
+}
+
+@media screen and (max-width: 767px) {
+  .main {
+    margin-top: 0;
+  }
+
+  .sidebar{
+    padding-left: 0;
+    padding-right: 0;
+    margin-top: 49px;
+ }
+}
+
+.profile-content {
+  /* выделение контента */
+  padding: 15px;
+  background: #fff;
+}
+
+.border {
+  /* граница вокруг блока с контентом */
+  border: 1px solid #dae1e8;
+}
+
+.center{
+  /* выравнивание по центру */
+  display:block;
+  margin:0 auto;
+}
+
+.line{
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.pageHead{
+  /* заголовок страницы */
+  margin-top: 0;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 767px) {
+  .pageHead {
+    text-align: center;
+  }
+}
+
+.swiper-container {
+  width: 100%;
+  height: 200px;
+}
+
+.swiper-container > .swiper-wrapper {
+  padding-top:20px;
+}
+
+.swiper-container img{
+  width: 70%;
+}
+
+/* Event cards style */
+.events{
+  padding-bottom: 0px;
+}
+.row-flex {
+    display: flex;
+    flex-flow: row wrap;
+}
+.eventCard p.eventName {
+  margin: 10px 5px 8px 5px;
+  font-size: 18px;
+  text-align: center;
+  text-transform: lowercase;
+}
+.eventCard p:first-letter {
+  text-transform: uppercase;
+}
+.findParnter{
+  color: #757575;
+  font-size: 12px;
+  font-weight: normal;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 0;
+}
+.eventCard{
+  margin-bottom: 20px;
+  padding: 0 0 10px 0;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+.eventCard:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+.eventCard img{
+  width: 100%;
+  border-radius: 5px 5px 0 0;
+}
+
+/* Event cards style */
+
+
+/* mosaik */
+
+.grid-container:hover{
+  cursor: pointer;
+  transform: scale(1.1);
+  transition: 1.0s transform ;
+  z-index: 100;
+}
+@media screen and (max-width: 767px) {
+  .mygrid{
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 15px;
+  }
+}
+.mosaicflow__item {
+  padding:3px;
+}
+.mosaicflow__column {
+  float:left;
+}
+.mosaicflow__item img {
+  display:block;
+  width:100%;
+  height:auto;
+  border-radius: 0;
+}
+.grid-container{
+  position: relative;
+}
+.grid-text{
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  background-color:rgba(0,0,0,.3);
+  padding: 5px 15px 5px 15px;
+}
+.grid-text p{
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+.grid-outside-link{
+  position: absolute;
+  right: 7%;
+  bottom: 1%;
+}
+.grid-outside-link img{
+  width: 30px;
+  height: 30px
+}
+
+/* mosaik */
+
+/* popWindow */
+.modal-sm{
+  border-radius: 5px;
+  border: none;
+}
+.modal-header{
+  border-radius: 5px 5px 0 0;
+  background-color: #F44336;
+  border: none;
+  padding: 15px;
+}
+.modal-header button{
+  width: 15px;
+  height: 15px;
+}
+.modal-header h4{
+  color:white;
+  font-size: 25px;
+  font-weight: bold;
+}
+.modal-header h5{
+  margin: 0;
+  color:white;
+  font-size: 13px;
+  font-weight: lighter;
+}
+
+.modal-body{
+  padding: 0;
+  border: none;
+}
+.ImgIcons{
+  padding: 0;
+  position: relative;
+  border: none;
+}
+.ImgIcons img{
+  width: 100%;
+}
+.ImgIcons .iconFooter{
+  position: absolute;
+  left: 15px;
+  bottom: -20px;
+  width: 100%;
+}
+.iconFooter .icon{
+  display: inline-block;
+  position: relative;
+  margin-right: 5px;
+  border-radius: 50px;
+  height: 50px;
+  width: 50px;
+}
+.icon img{
+  position: absolute;
+  height: 70%;
+  width: 70%;
+  left: 7.8px;
+  bottom: 8px;
+}
+.iconDisabled{
+  background-color: gray;
+}
+.like:hover{
+  background-color: #4CAF50;
+}
+.likeActive{
+  background-color: #4CAF50;
+}
+.dislike:hover{
+  background-color: #F44336;
+}
+.dislikeActive{
+  background-color: #F44336;
+}
+.link{
+  background-color: #2196F3;
+}
+.modal-body .bodyText{
+  margin: 30px 0 15px 15px;
+}
+.bodyText h4{
+  font-size: 18px;
+}
+
+.modal-footer{
+  padding: 15px;
+  border: none;
+}
+.modal-footer button{
+  background: none;
+  color: #F44336;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 5px;
+  padding-bottom: 2px;
+}
+.modal-footer button:hover{
+  font-size: 16px;
+  background-color: #E0E0E0;
+  color: #F44336;
+}
+
+.visited{
+  transition: 1.0s opacity ;
+  opacity: 0.5;
+}
+
+/* popWindow */
+
+.grid-item {
+  float: left;
+}
+
+.grid {
+  margin: 0 auto;
+}
+
+
+
+

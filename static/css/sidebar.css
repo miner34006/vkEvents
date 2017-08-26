@@ -1,0 +1,40 @@
+.profile-sidebar {
+  padding: 5px 0 5px 0;
+  margin-bottom: 15px;
+  background: white;
+}
+
+.profile-sidebar ul li {
+  border-bottom: 1px solid #E8F5E9;
+}
+
+.profile-sidebar ul li:last-child {
+  border-bottom: none;
+}
+
+.profile-sidebar ul li a {
+  color: #000000;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.profile-sidebar ul li a i {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.profile-sidebar ul li a:hover {
+  background-color: #B9F6CA;
+}
+
+.profile-usermenu ul li.active {
+  border-bottom: none;
+}
+
+.active{
+  background-color: #B9F6CA;
+  border-left: 3px solid #4CAF50;
+  margin-left: -3px;
+}
+
+

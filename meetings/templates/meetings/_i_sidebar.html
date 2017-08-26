@@ -1,0 +1,35 @@
+<div class="profile-sidebar hidden-xs shadow-3">
+  <ul class="nav">
+
+    <li class="{% if url == "news" %} active {% endif %}">
+      <a href="/">
+        <i class="glyphicon glyphicon-home"></i> Главная
+      </a>
+    </li>
+
+    <li class="{% if url == "events" %} active {% endif %}">
+      <a href="{% url "events" %}">
+        <i class="glyphicon glyphicon-gift"></i> Мои события
+      </a>
+    </li>
+
+    <li class="{% if url == "relatedMembers" %} active {% endif %}">
+      <a href="{% url "relatedMembers" %}">
+        <i class="glyphicon glyphicon-user"></i> Ищут пару
+      </a>
+    </li>
+
+    <li class="{% if url == "groups" or url == 'select_group' or url == 'select_group_page' %} active {% endif %}">
+      <a href="">
+        <i class="glyphicon glyphicon-flag"></i> PairMatching
+      </a>
+    </li>
+
+    <li class="{% if url == "information" %} active {% endif %}">
+      <a href="">
+        <i class="glyphicon glyphicon-info-sign"></i> О проекте
+      </a>
+    </li>
+
+  </ul>
+</div>

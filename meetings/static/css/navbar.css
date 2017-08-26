@@ -1,0 +1,63 @@
+/* задник и граница navBar'a */
+.navbar-default {
+  border: none;
+  background-color: #F44336;
+}
+
+/* граница для кнопки раскрытия для XC*/
+.navbar-default .navbar-toggle {
+  border: none;
+}
+
+/* фон для кнопки раскрытия для XC*/
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+  background-color: #D32F2F;
+}
+
+/* цвет для кнопки раскрытия для XC*/
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #fff;
+}
+
+.navbar-default .navbar-brand {
+  color: #fff;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+  color: #fff;
+}
+
+/* стили для ссылок в navBare'e */
+.navbar-default .navbar-nav > li > a {
+  color: #fff;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+/* при наведении на ссылки */
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: #fff;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+/* при наведении на ссылки при XS */
+@media screen and (max-width: 768px){
+  .navbar-default .navbar-nav > li > a:hover,
+  .navbar-default .navbar-nav > li > a:focus {
+    background-color: #B9F6CA;
+    color: black;
+
+  }
+}
+
+/* отменяет прокрутку для xs navBar'a*/
+#myNavbar{
+  overflow: hidden;
+  border: none;
+}

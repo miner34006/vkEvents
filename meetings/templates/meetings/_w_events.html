@@ -1,0 +1,63 @@
+{% extends "meetings/__l_left_sidebar.html" %}
+{% load staticfiles %}
+
+{% block meta%}
+  <meta name="_token" content="{{ csrf_token }}">
+{% endblock %}
+
+{% block main_col %}
+  <div class="row profile-content events shadow-3">
+    <h1 class="pageHead">Мои события</h1>
+    <hr class="line">
+    <div class="row row-flex">
+
+      {% for event in defaultEvents %}
+        <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="eventCard">
+          <img title="{{ event.event.event_name }}" alt="{{ event.event.event_name }}" src="{{ event.event.event_image }}">
+          <p class="eventName"> {{ event.event.event_name }} </p>
+          <p class="findParnter">
+            Найти партнера
+            {% if event.event_status %}
+            <input type="checkbox" id="{{ event.event.event_id }}" name="response" class="js-switch" checked/>
+            {% else %}
+            <input type="checkbox" id="{{ event.event.event_id }}" name="response" class="js-switch"/>
+            {% endif %}
+          </p>
+        </div>
+      </div>
+      {% endfor %}
+
+      {% for event in vkEvents %}
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <div class="eventCard">
+            <a target="_blank" href="https://vk.com/club{{event.event_id}}">
+              <img title="{{ event.event_name }}" alt="{{ event.event_name }}" src="{{ event.event_image }}">
+            </a>
+            <p class="eventName">{{ event.event_name }}</p>
+            <p class="findParnter">
+              Найти партнера
+              {% if event.event_status %}
+              <input type="checkbox" id="{{ event.event_id }}" name="response" class="js-switch" checked/>
+              {% else %}
+              <input type="checkbox" id="{{ event.event_id }}" name="response" class="js-switch"/>
+              {% endif %}
+            </p>
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static "js/switchery.js" %}"></script>
+  <script>
+    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+    elems.forEach(function(html) {
+      var switchery = new Switchery(html, {color: '#00C853'});
+    });
+  </script>
+  <script src="{% static "js/checkBox.js" %}"></script>
+{% endblock %}

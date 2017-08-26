@@ -1,0 +1,42 @@
+{% block navbar %}
+ <nav class="navbar navbar-default navbar-fixed-top shadow-2">
+  <div class="container-fluid">
+
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand visible-xs" href="/">vkEvents</a>
+    </div>
+
+    <div class="container hidden-xs">
+      <div class="row">
+        <div class="col-lg-offset-1 col-lg-2 col-sm-3">
+          <a class="navbar-brand" href="/">vkEvents</a>
+        </div>
+      </div>
+    </div>
+
+    <!--
+    <a href="https://oauth.vk.com/authorize?client_id=6135462&display=page&redirect_uri=http://vkmeeting.ru/auth&scope=groups&response_type=code&v=5.64">
+    111
+    </a>
+    -->
+
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <div class="visible-xs">
+        <ul class="nav navbar-nav">
+          <li>
+            <a href="{% url "events" %}">
+              <i class="glyphicon glyphicon-gift"></i> Events
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</nav>
+{% endblock %}

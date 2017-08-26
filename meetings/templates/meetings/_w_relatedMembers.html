@@ -1,0 +1,82 @@
+{% extends "meetings/__l_left_sidebar.html" %}
+{% load staticfiles %}
+
+{% block meta%}
+  <meta name="_token" content="{{ csrf_token }}">
+  <meta name="_getMemberInfo" content="{% url 'getMemberInfo' %}">
+  <meta name="_rateUser" content="{% url 'rateUser' %}">
+  <meta name="_infiniteScroll" content="{% url 'relatedMembers' %}">
+{% endblock %}
+
+{% block main_col %}
+  <div class="row profile-content grid shadow-3">
+    <h1 class="pageHead">Ищут пару</h1>
+    <hr class="line">
+
+    <div class="masonry" data-columns>
+      {% for eventMember in eventMembers %}
+        <div class="masonryItem">
+          <a id="{{ eventMember.eventMember_id }}" class="popWindow" data-toggle="modal" data-target=".userInfo">
+            <div class="grid-container">
+              <img id="image{{ eventMember.eventMember_id }}" src="{{ eventMember.eventMember_image }}">
+              <div class="grid-text">
+                <p>{{ eventMember.eventMember_firstName }}</p>
+              </div>
+              <div class="grid-outside-link">
+                <a target="_blank" href="https://vk.com/id{{ eventMember.eventMember_id }}">
+                  <img src="{{ MEDIA_URL }}ic_link_white_24dp_2x.png">
+                </a>
+              </div>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="modal fade userInfo" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h4 id="userName" class="modal-title">Имя Фамилия</h4>
+            <h5 id="userOnline">Был онлайн</h5>
+          </div>
+
+          <div class="modal-body">
+            <div class="ImgIcons">
+              <img id="userImage" src="{{ MEDIA_URL }}userImage.jpg">
+              <div class="iconFooter">
+                <div class="icon iconDisabled like shadow-1">
+                  <img id="likeButton" src="{{ MEDIA_URL }}ic_mood_white_24dp_2x.png">
+                </div>
+                <div class="icon iconDisabled dislike shadow-1">
+                  <img id="dislikeButton" src="{{ MEDIA_URL }}ic_mood_bad_white_24dp_2x.png">
+                </div>
+                <div class="icon link shadow-1">
+                  <a id='userLink' target="_blank" href="">
+                    <img src="{{ MEDIA_URL }}ic_link_white_24dp_2x.png">
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="bodyText">
+              <h4>Ищет партнера в событиях:</h4>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn" data-dismiss="modal" >ЗАКРЫТЬ</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static "js/relatedMembers.js" %}"></script>
+  <script src="{% static "js/salvattore.js" %}"></script>
+  <script src="{% static "js/infiniteScroll.js" %}"></script>
+{% endblock %}

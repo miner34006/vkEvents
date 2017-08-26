@@ -1,0 +1,19 @@
+{% extends "__base.html" %}
+
+{% block content %}
+  <h3>
+    <p><a href="/events">Events</a></p>
+    <div>
+        {% if eventMembers %}
+          {% for eventMember in eventMembers %}
+            <p>
+              {{ eventMember.eventMember_lastName }}
+              {{ eventMember.eventMember_firstName }}
+            </p>
+          {% endfor %}
+        {% else %}
+          <h2>Никто не ищет тебя, лох!</h2>
+        {% endif %}
+    </div>
+  </h3>
+{% endblock %}
