@@ -36,11 +36,11 @@ function getData(numPage) {
           salvattore['append_elements'](grid, [item]);
           item.outerHTML = h;
 
-          var $newElem = $('.newItem').find('a.popWindow');
+          var $newElem = $('.newItem');
           $newElem.on('click', function () {
             popClick(this.id)
           });
-          $('.masonryItem').removeClass('newItem')
+          $newElem.removeClass('newItem')
 
         });
       }
@@ -61,7 +61,9 @@ function like(event) {
       success: function(){
         $('#likeButton').parent().removeClass('like').addClass('likeActive');
         $('#dislikeButton').parent().removeClass('dislikeActive').addClass('dislike');
-        $('#image'+eventMemberId).addClass('visited')
+
+        $('#'+eventMemberId).find('img.itemImage').addClass('visited')
+
       }
     }
   });
@@ -81,7 +83,9 @@ function dislike(event) {
       success: function(){
         $('#dislikeButton').parent().removeClass('dislike').addClass('dislikeActive');
         $('#likeButton').parent().removeClass('likeActive').addClass('like');
-        $('#image'+eventMemberId).addClass('visited')
+
+        $('div#'+eventMemberId).find('img.itemImage').addClass('visited')
+
       }
     }
   });
@@ -94,9 +98,12 @@ function popClick(eventMemberId) {
     data: {eventMemberId: eventMemberId},
     success: function(response) {
 
-      const firstName = response.userData.firstName;
-      const lastName = response.userData.lastName;
-      const userImage = response.userData.image;
+      const $elem = $('div#' + eventMemberId).children('div#eventMemberData');
+
+      const firstName = $elem.data('firstName');
+      const lastName = $elem.data('lastName');
+      const userImage = $elem.data('image');
+
       const onlineStatus = response.userData.onlineStatus;
       const event = response.eventData.eventName;
       const eventId = response.eventData.eventId;

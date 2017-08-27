@@ -96,9 +96,6 @@ def getMemberInfo(request):
 
     return JsonResponse({
         'userData': {
-            'firstName': searchUser.serviceUser_firstName,
-            'lastName': searchUser.serviceUser_lastName,
-            'image': searchUser.serviceUser_image,
             # TODO добавить онлайн статус на сайте
             'onlineStatus': getOnlineStatus(eventMemberId),
         },

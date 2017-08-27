@@ -15,10 +15,17 @@
 
     <div class="masonry" data-columns>
       {% for eventMember in eventMembers %}
-        <div class="masonryItem">
-          <a id="{{ eventMember.eventMember_owner.serviceUser_id }}" class="popWindow" data-toggle="modal" data-target=".userInfo">
+
+        <div id="{{ eventMember.eventMember_owner.serviceUser_id }}" class="popWindow masonryItem" data-toggle="modal" data-target=".userInfo">
+
+            <div id="eventMemberData"
+                data-first-name="{{ eventMember.eventMember_owner.serviceUser_firstName }}"
+                data-last-name="{{ eventMember.eventMember_owner.serviceUser_lastName }}"
+                data-image="{{ eventMember.eventMember_owner.serviceUser_image }}">
+            </div>
+
             <div class="grid-container">
-              <img id="image{{ eventMember.eventMember_owner.serviceUser_id }}" src="{{ eventMember.eventMember_owner.serviceUser_image }}">
+              <img class="itemImage" src="{{ eventMember.eventMember_owner.serviceUser_image }}">
               <div class="grid-text">
                 <p>{{ eventMember.eventMember_owner.serviceUser_firstName }}</p>
               </div>
@@ -28,7 +35,7 @@
                 </a>
               </div>
             </div>
-          </a>
+
         </div>
       {% endfor %}
     </div>
@@ -77,7 +84,6 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="{% static "js/relatedMembers.js" %}"></script>
   <script src="{% static "js/salvattore.js" %}"></script>
   <script src="{% static "js/infiniteScroll.js" %}"></script>
 {% endblock %}

@@ -203,6 +203,7 @@ class Choice(models.Model):
     choiceList_whoChosen = models.ForeignKey(ServiceUser, related_name='whoChosen')
     choiceList_whomChosen = models.ForeignKey(EventMember, related_name='whomChosen')
     choiceList_choice = models.BooleanField()
+    #choiceList_hide = models.BooleanField(default=False)
 
 
 class VisitList(models.Model):

@@ -1,17 +1,23 @@
 {% for eventMember in eventMembers %}
-  <div class="masonryItem newItem">
-    <a id="{{ eventMember.eventMember_owner.serviceUser_id }}" class="popWindow" data-toggle="modal" data-target=".userInfo">
-      <div class="grid-container">
-        <img id="image{{ eventMember.eventMember_owner.serviceUser_id }}" src="{{ eventMember.eventMember_owner.serviceUser_image }}">
-        <div class="grid-text">
-          <p>{{ eventMember.eventMember_owner.serviceUser_firstName }}</p>
-        </div>
-        <div class="grid-outside-link">
-          <a target="_blank" href="https://vk.com/id{{ eventMember.eventMember_owner.serviceUser_id }}">
-            <img src="{{ MEDIA_URL }}ic_link_white_24dp_2x.png">
-          </a>
-        </div>
+  <div class="popWindow masonryItem newItem" id="{{ eventMember.eventMember_owner.serviceUser_id }}" data-toggle="modal" data-target=".userInfo">
+
+    <div id="eventMemberData"
+         data-first-name="{{ eventMember.eventMember_owner.serviceUser_firstName }}"
+         data-last-name="{{ eventMember.eventMember_owner.serviceUser_lastName }}"
+         data-image="{{ eventMember.eventMember_owner.serviceUser_image }}">
+    </div>
+
+    <div class="grid-container">
+      <img class="itemImage" src="{{ eventMember.eventMember_owner.serviceUser_image }}">
+      <div class="grid-text">
+        <p>{{ eventMember.eventMember_owner.serviceUser_firstName }}</p>
       </div>
-    </a>
+      <div class="grid-outside-link">
+        <a target="_blank" href="https://vk.com/id{{ eventMember.eventMember_owner.serviceUser_id }}">
+          <img src="{{ MEDIA_URL }}ic_link_white_24dp_2x.png">
+        </a>
+      </div>
+    </div>
+
   </div>
 {% endfor %}
