@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from meetings.models import Event, EventMember, ChoiceList
+from meetings.models import ServiceUser, Event, EventMember, Choice
 
 
 def addEventStatus(events, userId):
@@ -12,8 +12,7 @@ def addEventStatus(events, userId):
     """
     for elem in events:
         try:
-            event = Event.getEvent(elem['event_id'])
-            if event.event_members.filter(eventMember_id=userId).exists():
+            if EventMember.eventMemberExists(userId, elem['event_id']):
                 elem.update({'event_status': True})
             else:
                 elem.update({'event_status': False})
@@ -26,48 +25,71 @@ def addEventStatus(events, userId):
 def changeEventStatus(
         eventStatus: bool,
         eventId: int,
-        eventMember: EventMember) -> None:
+        userId: int) -> None:
     """
-    Изменение статуса ивента в базе данных
-    :param eventStatus: статус ивента (вкл. или выкл.)
-    :param eventId: id ивента
-    :param eventMember: кому принадлежит ивент
+    Изменение статуса Event в БД
+    :param eventStatus: статус (1 - добавить, 0 - удалить)
+    :param eventId: event_id который необходимо добавить/удалить
+    :param userId: serviceUser_id (активный пользователь)
     :return: None
     """
     if eventStatus:
-        if Event.eventExist(eventId):
-            event = Event.getEvent(eventId)
-        else:
-            event = Event.createEvent(eventId)
-        event.event_members.add(eventMember)
+        if not Event.eventExists(eventId):
+            Event.createEvent(eventId)
+        if not EventMember.eventMemberExists(userId, eventId):
+            EventMember.createEventMember(userId, eventId)
     else:
-        if Event.eventExist(eventId):
-            event = Event.getEvent(eventId)
-            event.event_members.remove(eventMember)
+        if Event.eventExists(eventId):
+            eventMember = EventMember.getEventMember(userId, eventId)
+            eventMember.delete()
 
 
 def getRelatedMembers(userId: int) -> EventMember:
     """
-    Получение списка уникальных пользователей для выдачи
+    Получение списка EventMember для выдачи
     :param userId: id пользователя
-    :return: список уникальных пользователей
+    :return: список EventMember
     """
-    user = EventMember.getEventMember(userId)
+    user = ServiceUser.getServiceUser(userId)
 
-    # Выборка пользователей с общими для user'a группами
-    relatedMembers = EventMember.objects.filter(
-        event__in=user.event_set.all()
-    ).exclude(
-        eventMember_id=user.eventMember_id
-    ).distinct()
+    userEvents = EventMember.objects.filter(
+        eventMember_owner=user
+    ).values('eventMember_event')
 
-    # Выборка пользователей, которых user уже оценил
-    # userChoices = ChoiceList.objects.filter(
-    #     choiceList_whoChoosen=user
-    # )
-    #
-    # relatedMembers = relatedMembers.exclude(
-    #     eventMember_id__in=userChoices.values('choiceList_whomChoosen'),
-    # )
+    commonEventsMembers= EventMember.objects.filter(
+        eventMember_event__in=userEvents
+    ).exclude(eventMember_owner=user)
 
-    return relatedMembers
+    ratedUsers = Choice.objects.filter(
+        choiceList_whoChosen=user,
+    ).values('choiceList_whomChosen__id')
+
+    return commonEventsMembers\
+        .exclude(id__in=ratedUsers)\
+        .distinct('eventMember_owner')
+
+
+def getSearchableEvent(userId, eventMemberId):
+    # ивенты пользователя
+    userEvents = EventMember.objects.filter(
+        eventMember_owner=ServiceUser.getServiceUser(userId)
+    ).values('eventMember_event')
+
+    # EventMember с общей группой
+    searchEventMembers = EventMember.objects.filter(
+        eventMember_owner=ServiceUser.getServiceUser(eventMemberId),
+        eventMember_event__in=userEvents,
+    )
+
+    finishEvent = None
+    for eventMember in searchEventMembers:
+        if Choice.objects.filter(
+            choiceList_whoChosen=ServiceUser.getServiceUser(userId),
+            choiceList_whomChosen=eventMember,
+        ).exists():
+            pass
+        else:
+            finishEvent = eventMember.eventMember_event
+            break
+
+    return finishEvent

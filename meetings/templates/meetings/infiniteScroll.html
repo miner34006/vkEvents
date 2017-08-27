@@ -1,13 +1,13 @@
 {% for eventMember in eventMembers %}
   <div class="masonryItem newItem">
-    <a id="{{ eventMember.eventMember_id }}" class="popWindow" data-toggle="modal" data-target=".userInfo">
+    <a id="{{ eventMember.eventMember_owner.serviceUser_id }}" class="popWindow" data-toggle="modal" data-target=".userInfo">
       <div class="grid-container">
-        <img id="image{{ eventMember.eventMember_id }}" src="{{ eventMember.eventMember_image }}">
+        <img id="image{{ eventMember.eventMember_owner.serviceUser_id }}" src="{{ eventMember.eventMember_owner.serviceUser_image }}">
         <div class="grid-text">
-          <p>{{ eventMember.eventMember_firstName }}</p>
+          <p>{{ eventMember.eventMember_owner.serviceUser_firstName }}</p>
         </div>
         <div class="grid-outside-link">
-          <a target="_blank" href="https://vk.com/id{{ eventMember.eventMember_id }}">
+          <a target="_blank" href="https://vk.com/id{{ eventMember.eventMember_owner.serviceUser_id }}">
             <img src="{{ MEDIA_URL }}ic_link_white_24dp_2x.png">
           </a>
         </div>

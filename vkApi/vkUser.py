@@ -17,6 +17,28 @@ def getPhotos(ids):
     return getRequest('users.get', parameters)
 
 
+def getPhoto(id):
+    fields = 'photo_max'
+    parameters = {
+        'user_id': id,
+        'fields': fields,
+    }
+    return getRequest('users.get', parameters)[0]['photo_max']
+
+
+def getOnlineStatus(id):
+    fields = 'online, last_seen'
+    parameters = {
+        'user_id': id,
+        'fields': fields,
+    }
+    response = getRequest('users.get', parameters)[0]
+    if response['online'] == 1:
+        return 'Online'
+    else:
+        return "Offline"
+
+
 def getUserEvents(userId: str, token: str) -> list:
     """
     Получение id ивентов пользователя

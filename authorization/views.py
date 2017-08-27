@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import redirect, HttpResponse
-from meetings.models import EventMember
+from meetings.models import ServiceUser
 
 import authorization.utils as utils
 from vkApi.vkApi import AUTH_LINK
@@ -29,10 +29,10 @@ def authorization(request):
 
     request = utils.updateSession(request, userId, expiresIn)
 
-    if EventMember.eventMemberExist(userId):
+    if ServiceUser.serviceUserExists(userId):
         utils.updateToken(userId, accessToken)
     else:
-        EventMember.createEventMember(userId, accessToken)
+        ServiceUser.createServiceUser(userId, accessToken)
 
     return redirect(request.session['activeUrl'])
 

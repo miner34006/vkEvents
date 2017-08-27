@@ -2,146 +2,159 @@
 
 from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
-from meetings.models import EventMember, Event, ChoiceList
+from meetings.models import ServiceUser, EventMember, Event, Choice
 from django.views.decorators.http import require_http_methods
 from django.core.paginator import Paginator
 
-
-from vkApi.vkUser import VkUser, getUserEvents
-from meetings.utils import changeEventStatus, addEventStatus, getRelatedMembers
+from vkApi.vkUser import VkUser, getUserEvents, getOnlineStatus
+from meetings import utils
 
 
 def initialization(request):
     userId = request.session['userId']
-    user = EventMember.getEventMember(userId)
+    user = ServiceUser.getServiceUser(userId)
 
     photo = VkUser(userId).getPhoto()
-    if user.eventMember_image != photo:
-        user.eventMember_image = photo
+    if user.serviceUser_image != photo:
+        user.serviceUser_image = photo
         user.save()
 
     template = 'meetings/__l_left_sidebar.html'
-    context = {
-        'option': None,
-    }
     return render(request, template)
-
-
-def showMembers(request):
-    if request.method == 'POST':
-        eventId = request.POST.get('eventId')
-        userId = request.session['userId']
-        eventMembers = Event.getEventMembers(eventId, userId)
-
-        template = 'meetings/_w_template.html'
-        context = {
-            'eventMembers': eventMembers,
-        }
-        return render(request, template, context)
 
 
 def relatedMembers(request):
     """
-    Отображение страницы "Ищут пару"
+    relatedMembers view
     :param request: объект запроса
-    :return: страница с пользователями, ищущими пару
+    (
+        request.session['userId'] - serviceUser_id (активный пользователь).
+    )
+    :return: rendered page
     """
-    userId = request.session['userId']
-    eventMembers = getRelatedMembers(userId)
+    # TODO кэширование eventMembers
+    eventMembers = utils.getRelatedMembers(request.session['userId'])
 
     if request.is_ajax():
-        numPage = request.GET.get('numPage')
-
-        paginator = Paginator(eventMembers, 14).page(numPage)
-
         template = 'meetings/infiniteScroll.html'
         context = {
-            'eventMembers': paginator,
+            'eventMembers': Paginator(eventMembers, 32).page(request.GET.get('numPage')),
         }
         return render(request, template, context)
 
-    paginator = Paginator(eventMembers, 14)
     template = 'meetings/_w_relatedMembers.html'
     context = {
-        'eventMembers': paginator.page(1),
+        'eventMembers': Paginator(eventMembers, 32).page(1),
     }
     return render(request, template, context)
 
 
-@require_http_methods(["POST"])
+@require_http_methods(['POST'])
 def rateUser(request):
+    """
+    Добавление оценки EventMember'у
+    :param request: объект запроса
+    (
+        request.POST['value'] - код оценки (1 - да, 0 - нет);
+        request.POST['eventMemberId'] - EventMember, которому дана оценка;
+        request.POST['eventId'] - event_id в котором дана оценка;
+        request.session['userId'] - serviceUser_id (активный пользователь).
+    )
+    :return: HttpResponse
+    """
     try:
-        user = EventMember.getEventMember(request.session['userId'])
-        eventMember = EventMember.getEventMember(request.POST.get('userId'))
-        ChoiceList.makeChoice(
-            choice=int(request.POST.get('value')),
-            whoChoosen=user,
-            whomChoosen=eventMember,
-            event=None,
+        Choice.makeChoice(
+            choice=request.POST.get('value'),
+            whoChosen=ServiceUser.getServiceUser(request.session['userId']),
+            whomChosen=EventMember.getEventMember(
+                request.POST.get('eventMemberId'),
+                request.POST.get('eventId'),
+            )
         )
-        return HttpResponse("Like status changing is successful.")
+        return HttpResponse('Like status changing is successful')
     except:
-        return HttpResponse("An error occurred while changing the like status.")
+        # TODO добавить 500 ошибку
+        raise Exception
 
 
-@require_http_methods(["GET"])
+@require_http_methods(['GET'])
 def getMemberInfo(request):
+    """
+    Получение информации о EventMember'e
+    :param request: объект запроса
+    (
+        request.GET['eventMemberId'] - EventMember_id пользователь для поиска;
+        request.session['userId'] - serviceUser_id (активный пользователь).
+    )
+    :return: JsonResponse
+    """
     userId = request.session['userId']
-    searchUserId = request.GET.get('userId')
+    eventMemberId = request.GET.get('eventMemberId')
 
-    eventMember = EventMember.getEventMember(searchUserId)
+    event = utils.getSearchableEvent(userId, eventMemberId)
+    searchUser = ServiceUser.getServiceUser(eventMemberId)
 
-    try:
-        choice = ChoiceList.objects.get(
-            choiceList_whoChoosen=EventMember.getEventMember(userId),
-            choiceList_whomChoosen=EventMember.objects.get(eventMember_id=searchUserId)
-        ).choiceList_choice
-    except ChoiceList.DoesNotExist:
-        choice = None
-
-    response = JsonResponse({
-        'firstName': eventMember.eventMember_firstName,
-        'lastName': eventMember.eventMember_lastName,
-        'image': eventMember.eventMember_image,
-        'choice': choice
+    return JsonResponse({
+        'userData': {
+            'firstName': searchUser.serviceUser_firstName,
+            'lastName': searchUser.serviceUser_lastName,
+            'image': searchUser.serviceUser_image,
+            # TODO добавить онлайн статус на сайте
+            'onlineStatus': getOnlineStatus(eventMemberId),
+        },
+        'eventData': {
+            'eventName': event.event_name,
+            'eventId': event.event_id,
+        },
+        'choice': Choice.getChoice(
+            whoChosen=ServiceUser.getServiceUser(userId),
+            whomChosen=EventMember.getEventMember(eventMemberId, event.event_id)
+        )
     })
-    return response
 
 
-@require_http_methods(["POST"])
+@require_http_methods(['POST'])
 def changeEventStatus(request):
     """
-    Обработка запроса на добавление или удаления события
-    :param request: объект запроса
-    :return: None
+    Изменение статуса события для ServiceUser (добавление или удаление
+    EventMember'a, связанного с ServiceUser)
+    :param request:
+    (
+        request.POST['response'] - статус (1 - добавить, 0 - удалить);
+        request.POST['eventId'] - event_id который необходимо добавить/удалить;
+        request.session['userId'] - serviceUser_id (активный пользователь).
+    )
+    :return: HttpResponse
     """
+    eventStatus = False
     if request.POST.get('response') == '1':
         eventStatus = True
-    else:
-        eventStatus = False
 
-    response = "Event status changing is successful."
     try:
-        changeEventStatus(
-            eventStatus,
+        utils.changeEventStatus(
+            eventStatus=eventStatus,
             eventId=request.POST.get('eventId'),
-            eventMember=EventMember.getEventMember(request.session['userId']),
+            userId=request.session['userId'],
         )
+        return HttpResponse('Event status changing is successful')
     except:
-        response = "An error occurred while changing the event status."
-    return HttpResponse(response)
+        # TODO добавить 500 ошибку
+        raise Exception
 
 
 def events(request):
     """
-    Отображение событий пользователя
+    events view
     :param request: объект запроса
-    :return: страница с событиями пользователя
+    (
+        request.session['userId'] - serviceUser_id (активный пользователь).
+    )
+    :return: rendered page
     """
     userId = request.session['userId']
-    user = EventMember.getEventMember(userId)
+    user = ServiceUser.objects.get(serviceUser_id=userId)
 
-    vkEvents = addEventStatus(getUserEvents(userId, user.eventMember_token), userId)
+    vkEvents = utils.addEventStatus(getUserEvents(userId, user.serviceUser_token), userId)
     defaultEvents = Event.getDefaultEvents(userId)
 
     template = 'meetings/_w_events.html'

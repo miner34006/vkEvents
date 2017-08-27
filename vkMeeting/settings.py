@@ -85,8 +85,12 @@ WSGI_APPLICATION = 'vkMeeting.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'vkEvents.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'vkevents',
+        'USER' : 'django',
+        'PASSWORD' : 'jMUzxuecAl34006',
+        'HOST' : '127.0.0.1',
+        'PORT' : '5432',
     }
 }
 

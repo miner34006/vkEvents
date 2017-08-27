@@ -1,7 +1,8 @@
 $(document).ready(function () {
+  $(window).scrollTop(0);
   var numPage = 2;
   $(window).scroll(function() {
-    if ($(window).scrollTop() + $(window).height() >= ($(document).height()*1)) {
+    if ($(window).scrollTop() + $(window).height() >= ($(document).height())) {
       getData(numPage);
       numPage ++;
     }
@@ -47,55 +48,64 @@ function getData(numPage) {
 }
 
 function like(event) {
-  const userId = event.data.userId;
+  const eventMemberId = event.data.eventMemberId;
+  const eventId = event.data.eventId;
   $.ajax({
     type: "POST",
     url: $('meta[name="_rateUser"]').attr('content'),
     data: {
       'value': 1,
-      'userId': userId,
+      'eventMemberId': eventMemberId,
+      'eventId': eventId,
       'csrfmiddlewaretoken': $('meta[name="_token"]').attr('content'),
       success: function(){
         $('#likeButton').parent().removeClass('like').addClass('likeActive');
         $('#dislikeButton').parent().removeClass('dislikeActive').addClass('dislike');
-        $('#image'+userId).addClass('visited')
+        $('#image'+eventMemberId).addClass('visited')
       }
     }
   });
 }
 
 function dislike(event) {
-  const userId = event.data.userId;
+  const eventMemberId = event.data.eventMemberId;
+  const eventId = event.data.eventId;
   $.ajax({
     type: "POST",
     url: $('meta[name="_rateUser"]').attr('content'),
     data: {
       'value': 0,
-      'userId': userId,
+      'eventMemberId': eventMemberId,
+      'eventId': eventId,
       'csrfmiddlewaretoken': $('meta[name="_token"]').attr('content'),
       success: function(){
         $('#dislikeButton').parent().removeClass('dislike').addClass('dislikeActive');
         $('#likeButton').parent().removeClass('likeActive').addClass('like');
-        $('#image'+userId).addClass('visited')
+        $('#image'+eventMemberId).addClass('visited')
       }
     }
   });
 }
 
-function popClick(userId) {
+function popClick(eventMemberId) {
   $.ajax({
     type: 'GET',
     url: $('meta[name="_getMemberInfo"]').attr('content'),
-    data: {userId: userId},
+    data: {eventMemberId: eventMemberId},
     success: function(response) {
 
-      const firstName = response.firstName;
-      const lastName = response.lastName;
-      const userImage = response.image;
+      const firstName = response.userData.firstName;
+      const lastName = response.userData.lastName;
+      const userImage = response.userData.image;
+      const onlineStatus = response.userData.onlineStatus;
+      const event = response.eventData.eventName;
+      const eventId = response.eventData.eventId;
 
       $('#userName').html(firstName + ' ' +lastName);
+      $('#userOnline').html(onlineStatus);
       $('#userImage').attr('src', userImage);
-      $('#userLink').attr('href', 'https://vk.com/id'+userId);
+      $('#userLink').attr('href', 'https://vk.com/id'+eventMemberId);
+      $('#event').html(event);
 
       var $dislikeButton = $('#dislikeButton');
       var $likeButton = $('#likeButton');
@@ -109,8 +119,8 @@ function popClick(userId) {
         $dislikeButton.parent().addClass('dislikeActive');
       }
 
-      $likeButton.off('click').on('click', { userId: userId }, like);
-      $dislikeButton.off('click').on('click', { userId: userId }, dislike);
+      $likeButton.off('click').on('click', { eventMemberId: eventMemberId, eventId: eventId }, like);
+      $dislikeButton.off('click').on('click', { eventMemberId: eventMemberId, eventId: eventId }, dislike);
     }
   });
 }

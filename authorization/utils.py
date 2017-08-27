@@ -8,7 +8,8 @@ author: Polianok Bogdan
 
 import requests
 from vkApi.vkApi import OAUTH_LINK, CLIENT_SECRET, APP_ID
-from meetings.models import EventMember
+from meetings.models import ServiceUser
+
 
 def getUserData(request):
     """Получение данных о пользователе vk
@@ -28,6 +29,7 @@ def getUserData(request):
         'expiresIn': data['expires_in'],
     }
 
+
 def updateToken(userId, accessToken):
     """Обновляет значение токена в БД для пользователя
     
@@ -35,9 +37,10 @@ def updateToken(userId, accessToken):
     :param accessToken: токен пользователя
     :return: None
     """
-    eventMember = EventMember.objects.get(eventMember_id=userId)
-    eventMember.eventMember_token = accessToken
-    eventMember.save()
+    serviceUser = ServiceUser.objects.get(serviceUser_id=userId)
+    serviceUser.serviceUser_token = accessToken
+    serviceUser.save()
+
 
 def updateSession(request, userId, expiresIn):
     """

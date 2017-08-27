@@ -11,7 +11,6 @@ def authMiddleware(get_response):
             return get_response(request)
 
         statement1 = 'userId' in request.session
-        #statement2 = EventMember.eventMemberExist(request.session['userId'])
         if not statement1:
             request.session['activeUrl'] = request.path
             return HttpResponseRedirect(reverse('redirect'))
