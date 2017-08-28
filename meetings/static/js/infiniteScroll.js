@@ -99,7 +99,6 @@ function popClick(eventMemberId) {
     success: function(response) {
 
       const $elem = $('div#' + eventMemberId).children('div#eventMemberData');
-
       const firstName = $elem.data('firstName');
       const lastName = $elem.data('lastName');
       const userImage = $elem.data('image');
@@ -108,7 +107,7 @@ function popClick(eventMemberId) {
       const event = response.eventData.eventName;
       const eventId = response.eventData.eventId;
 
-      $('#userName').html(firstName + ' ' +lastName);
+      $('#userName').html(firstName + ' ' + lastName);
       $('#userOnline').html(onlineStatus);
       $('#userImage').attr('src', userImage);
       $('#userLink').attr('href', 'https://vk.com/id'+eventMemberId);

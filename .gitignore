@@ -1,3 +1,4 @@
 vkEvents.sqlite3
 playground.py
 .idea/
+__pycache__/
